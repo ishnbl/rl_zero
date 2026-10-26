@@ -1,0 +1,4 @@
+# Versions from the pinned Open Instruct uv.lock. No GPU libraries.
+numpy==2.2.6
+scipy==1.17.0
+sympy==1.14.0

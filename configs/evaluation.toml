@@ -1,0 +1,13 @@
+# This protocol is held fixed across initializations and trained checkpoints.
+# These are local research evaluations, not a claim to reproduce paper scores.
+name = "controlled-v1"
+template_mode = "controlled"
+math_template = "olmo_thinker_rlzero"
+code_template = "olmo_lab_code"
+temperature = 1.0
+top_p = 1.0
+max_tokens = 16384
+samples = 8
+seed = 42
+tensor_parallel_size = 1
+gpu_memory_utilization = 0.85

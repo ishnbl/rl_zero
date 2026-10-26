@@ -1,0 +1,7 @@
+name = "math_code_full_rlvr"
+initialization = "math"
+method = "rlvr"
+recipe = "configs/recipes/code_rlvr.toml"
+hardware = "configs/hardware/single_node_8gpu.toml"
+data_dir = "data/code_full"
+seed = 1

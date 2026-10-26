@@ -1,0 +1,13 @@
+# Copy to configs/experiments/ and give the experiment a new name.
+name = "math_code_rlvr_seed2"
+initialization = "math"
+method = "rlvr"
+recipe = "configs/recipes/code_rlvr.toml"
+hardware = "configs/hardware/single_node_8gpu.toml"
+data_dir = "data/code_controlled"
+seed = 2
+
+[trainer]
+# Overrides are ordinary pinned Open Instruct arguments.
+learning_rate = 5e-7
+total_episodes = 25600

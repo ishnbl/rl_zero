@@ -1,0 +1,14 @@
+# Starting layout for an 8-GPU node. Long contexts need a memory fit check.
+[runtime]
+uv = "uv"
+cuda_group = "cuda12"
+sft_processes = 8
+accelerate_config = "configs/hardware/accelerate_zero3.yaml"
+
+[rlvr]
+num_learners_per_node = [4]
+vllm_num_engines = 4
+vllm_tensor_parallel_size = 1
+vllm_gpu_memory_utilization = 0.85
+
+[sft]

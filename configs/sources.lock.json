@@ -1,0 +1,24 @@
+{
+  "open_instruct": {
+    "url": "https://github.com/allenai/open-instruct.git",
+    "commit": "3bb265641634d8ebe274311271a0b0dfbdcdd81f",
+    "recipe_path": "scripts/train/olmo3/7b_rlzero_code.sh",
+    "original_run_commit": "d928a7cd29c2610af04300f817494c8e6dba977d"
+  },
+  "models": {
+    "base": {"id": "allenai/Olmo-3-1025-7B", "revision": "a81bae42db3975be1671e27b9c9a56da1a9f980f"},
+    "math": {"id": "allenai/Olmo-3-7B-RL-Zero-Math", "revision": "dee26a4074b88215cd1326472e1ab14d0259d892"}
+  },
+  "benchmarks": {
+    "math500": {"id": "HuggingFaceH4/MATH-500", "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be", "config": "default", "split": "test"},
+    "gsm8k": {"id": "openai/gsm8k", "revision": "740312add88f781978c0658806c59bc2815b9866", "config": "main", "split": "test"},
+    "mbpp": {"id": "google-research-datasets/mbpp", "revision": "4bb6404fdc6cacfda99d4ac4205087b89d32030c", "config": "sanitized", "split": "test"},
+    "humaneval": {"id": "openai/openai_humaneval", "revision": "7dce6050a7d6d172f3cc5c32aa97f52fa1a2e544", "config": "openai_humaneval", "split": "test"}
+  },
+  "code_dataset": {
+    "id": "allenai/Dolci-RL-Zero-Code-7B",
+    "revision": "054c0a1f9c5fd52566ad9124aa2e702924803cd3",
+    "split": "train",
+    "config": "default"
+  }
+}
