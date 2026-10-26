@@ -13,6 +13,7 @@ from pathlib import Path
 from rl_zero.benchmarks import prepare_benchmark, prepare_hub_code
 from rl_zero.config import resolve_config
 from rl_zero.data import prepare_code_file
+from rl_zero.daytona_backend import DaytonaSettings, build_snapshot
 from rl_zero.demo import run_demo
 from rl_zero.diagnostics import dashboard
 from rl_zero.evaluation import grade_predictions
@@ -119,12 +120,19 @@ def parser():
     inspect = commands.add_parser("dashboard", help="Write an interactive HTML metric viewer")
     inspect.add_argument("run_dir", type=Path)
     inspect.add_argument("--output", type=Path)
-    verifier = commands.add_parser("verifier", help="Serve the Docker-backed code reward API")
+    snapshot = commands.add_parser(
+        "daytona-snapshot", help="Plan or explicitly build a remote verifier snapshot"
+    )
+    snapshot.add_argument("--config", type=Path, default=Path("configs/verifiers/daytona.toml"))
+    snapshot.add_argument("--execute", action="store_true")
+    verifier = commands.add_parser("verifier", help="Serve the Daytona/Docker code reward API")
+    verifier.add_argument("--backend", choices=["daytona", "docker"], default="daytona")
+    verifier.add_argument("--config", type=Path, default=Path("configs/verifiers/daytona.toml"))
     verifier.add_argument("--host", default="127.0.0.1")
     verifier.add_argument("--port", type=int, default=1234)
     verifier.add_argument("--image", default="rl-zero-verifier:local")
     verifier.add_argument("--trace-path", default="runs/verifier.jsonl")
-    verifier.add_argument("--workers", type=int, default=4)
+    verifier.add_argument("--workers", type=int)
     checkpoints = commands.add_parser(
         "checkpoints", help="Find exported HF checkpoints within a training run"
     )
@@ -259,7 +267,17 @@ def main():
         elif command == "dashboard":
             print(dashboard(args.run_dir, args.output or args.run_dir / "diagnostics.html"))
         elif command == "verifier":
-            serve(args.host, args.port, args.image, args.trace_path, args.workers)
+            serve(
+                args.host,
+                args.port,
+                args.image,
+                args.trace_path,
+                args.workers,
+                args.backend,
+                root / args.config,
+            )
+        elif command == "daytona-snapshot":
+            build_snapshot(root, DaytonaSettings.from_file(root / args.config), execute=args.execute)
         elif command == "checkpoints":
             paths = [
                 str(p.parent.resolve())

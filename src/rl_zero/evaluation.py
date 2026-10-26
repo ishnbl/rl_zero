@@ -45,11 +45,13 @@ def grade_predictions(
         if not health.get("image_id"):
             raise ValueError("Code grader health must expose an image_id for reproducible grading")
         grader = {
-            "kind": "docker-code-v1",
+            "kind": f"{health.get('backend', 'docker')}-code-v1",
             "image_id": health["image_id"],
             "per_test_seconds": 1.0,
             "extraction_sha256": object_hash(extract_code.__code__.co_code.hex()),
         }
+        if "execution_identity" in health:
+            grader["execution_identity"] = health["execution_identity"]
     else:
         grader = metadata["grader_source"]
     records, scores = [], {}

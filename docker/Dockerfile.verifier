@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 COPY docker/requirements-verifier.txt /requirements-verifier.txt
 RUN pip install --no-cache-dir -r /requirements-verifier.txt
-COPY docker/runner.py /runner.py
+COPY src/rl_zero/sandbox_runner.py /runner.py
 USER 65534:65534
 ENTRYPOINT ["python", "-I", "/runner.py"]

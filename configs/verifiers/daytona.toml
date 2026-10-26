@@ -1,0 +1,15 @@
+# Create this snapshot remotely with `rl-zero daytona-snapshot --execute`.
+snapshot = "rl-zero-verifier-v1"
+# Set to the returned snapshot UUID to reject a changed name→snapshot mapping.
+expected_snapshot_id = ""
+workers = 1
+create_timeout = 120
+transfer_timeout = 120
+delete_timeout = 60
+ttl_minutes = 30
+
+# Used only by the explicit remote snapshot build command. CPU-only.
+base_image = "python:3.12-slim"
+cpu = 1
+memory = 1
+disk = 3

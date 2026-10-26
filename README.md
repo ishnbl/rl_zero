@@ -11,8 +11,9 @@ The two initializations are pinned revisions of:
 
 **No GPU training or inference was run during setup.** The lightweight environment,
 upstream checkout, prepared data, benchmark snapshots, and synthetic walkthrough
-are available locally. Docker and the GPU training environment still need setup
-on the eventual training machine.
+are available locally. Code verification supports Daytona without local Docker;
+Daytona credentials/a snapshot and the GPU training environment still need setup
+on the eventual training machine. See [Daytona setup](docs/daytona.md).
 
 ## Start here
 
@@ -118,20 +119,22 @@ single-node profile allocates four learner GPUs and four rollout GPUs for RLVR,
 or eight ZeRO-3 processes for SFT. It is a starting layout, not a measured memory
 fit guarantee for 18k-token contexts.
 
-First install the upstream environment on the training machine:
+First install the upstream environment on the training machine, then set up the
+remote verifier following [Daytona setup](docs/daytona.md):
 
 ```bash
 uv sync --project vendor/open-instruct --frozen --no-default-groups --group dev --group cuda12
-docker build -f docker/Dockerfile.verifier -t rl-zero-verifier:local .
-rl-zero verifier --trace-path runs/verifier.jsonl
+python -m pip install -e '.[daytona]'
+rl-zero daytona-snapshot  # Plan only; the guide covers remote creation and credentials.
+rl-zero verifier --backend daytona --trace-path runs/verifier.jsonl
 ```
 
-The verifier stays running in its terminal. Its Docker workers have no network,
-no host mounts, a read-only root, memory/process/CPU limits, and an unprivileged
-user. The image includes NumPy, SciPy, and SymPy. Extend its pinned requirements
-when your tasks need other libraries; record a new image identity.
-Docker shares the host kernel: use a dedicated worker host for adversarial code.
-Its per-candidate container startup favors readability and isolation over scale.
+The verifier stays running in its terminal. Daytona creates a fresh sandbox per
+candidate with blocked outbound networking and unprivileged candidate processes.
+The environment includes NumPy, SciPy and SymPy. It records snapshot/runner
+identity and deletes each sandbox after execution. No local Docker is required.
+The optional Docker path is `docker build -f docker/Dockerfile.verifier -t
+rl-zero-verifier:local .`, then `rl-zero verifier --backend docker`.
 
 In another terminal:
 
@@ -182,7 +185,7 @@ rl-zero compare --before runs/eval/base.math500.score.json \
 ```
 
 For code, use `data/code/test.eval.jsonl`, MBPP, or HumanEval, and grade through
-the running Docker verifier (`--upstream` is unnecessary for code). `--k 8`
+the running verifier (`--upstream` is unnecessary for code). `--k 8`
 computes pass@8 from the same eight saved completions; the default is pass@1.
 
 The JSON and Markdown comparison reports show signed percentage-point changes,

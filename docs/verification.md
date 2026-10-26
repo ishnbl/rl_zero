@@ -1,5 +1,13 @@
 # Verification performed on 2026-10-26
 
+The subsequent Daytona extension adds seven offline checks (17 total when the
+optional SDK is installed), covering provider lifecycle, creation-timeout cleanup,
+immutable runner bytes, expected-output isolation, result validation, local HTTP
+grading and dry-run snapshot planning. Daytona SDK 0.226.1 request models were
+constructed locally and checked against its installed source. No authenticated
+Daytona requests, cloud provisioning or live remote execution were performed.
+See [the Daytona runbook](daytona.md).
+
 All work ran on CPUs. No model weights were downloaded, no GPU was queried, and
 no training or model inference was launched. The local environment has no torch
 installation. Dataset files and tokenizer files were downloaded intentionally.

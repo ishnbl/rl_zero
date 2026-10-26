@@ -13,7 +13,8 @@ imports. Training and model inference run in Open Instruct's separate environmen
 | `launch.py`, `train_entry.py` | Reviewable commands, provenance, run lifecycle |
 | `runtime_hooks.py` | Shared templates and fail-closed verifier in Ray workers |
 | `rewards.py`, `verifier_client.py` | Test decoding and transparent reward semantics |
-| `verifier.py`, `docker/runner.py` | HTTP API and isolated code execution |
+| `verifier.py`, `execution_backends.py`, `daytona_backend.py` | HTTP API and provider lifecycle |
+| `sandbox_runner.py` | Shared assertion/stdin-stdout test runner |
 | `instrumentation.py`, `diagnostics.py` | Local metrics and interactive viewer |
 | `generation.py`, `evaluation.py` | Saved model completions and task grading |
 | `report.py`, `metrics.py` | Paired capability/retention statistics |
@@ -90,8 +91,9 @@ markers, raises the error through Ray, and the launcher invalidates the run.
 The worker setup hook is an explicit runtime adaptation; inspect its receipts
 on the first training run. No tracked file in the upstream checkout is patched.
 
-The Docker image includes standard Python, NumPy, SciPy and SymPy. It cannot
+The execution environment includes standard Python, NumPy, SciPy and SymPy. It cannot
 verify arbitrary third-party APIs or services. Extend the image with pinned
 dependencies when the dataset requires them, and keep its image ID in results.
 For high throughput, implement a compatible external service with isolated
 workers and matching `/health`, `/test_program` and `/test_program_stdio` contracts.
+The included [Daytona backend](daytona.md) uses this contract without local Docker.
